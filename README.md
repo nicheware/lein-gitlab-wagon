@@ -2,7 +2,7 @@
 
 Enables Clojure Leiningen projects to deploy and consume artifacts in private GitLab maven repositories.
 
-Current version: [lein-gitlab-wagon "1.0.0"]
+Current version: `[lein-gitlab-wagon "1.0.0"]`
 
 ## Context
 ### Problem
@@ -23,19 +23,19 @@ The `lein-gitlab-wagon` is a wrapper around the standard HTTP wagon. It will acc
 
 ### Leiningen 2.x
 
-Add the plugin and repositories listing to your `project.clj`.
+Add the plugin to your `project.clj`.
 
 ```clj
 :plugins [[lein-gitlab-wagon "1.0.0"]]
 ```
 
-You can specify the GitLab token type (`Private-Token` or `Job-Token`) using `:username`.
+When configuring you GitLab maven repository in the project.clj, you can specify the GitLab token type (`Private-Token` or `Job-Token`) using `:username`.
 
 You can specify the token value (Personal token or CI/CD token) using  `:password`.
 
 `:username` and `:password` are defined using any of the standard Leiningen authentication configuration techniques.
 
-In order to trigger the use of this repository wagon you need to replace the `https:` scheme in your Gitlab URL with `gitlab:`. At execution time, the wagon will still use `https` to communicate with the repository.
+In order to trigger the use of this repository wagon you need to replace the `https:` scheme in your GitLab URL with `gitlab:`. At execution time, the wagon will still use `https` to communicate with the repository.
 
 #### Store credentials under arbitrary environment variables
 
