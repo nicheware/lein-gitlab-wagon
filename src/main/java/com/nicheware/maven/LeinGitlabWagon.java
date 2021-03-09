@@ -51,14 +51,7 @@ public class LeinGitlabWagon extends HttpWagon {
     private static String REPOSITORY_SCHEME = "https:";
 
     /**
-     * If the repository URL scheme is "gitlab":
-     *
      * Override so we can extract the token name and token from the AuthenticationInfo, and use them instead as HTTP Headers.
-     *
-     * Always pass null up to super class method for the AuthenticationInfo, as we don't want any HTTP Authentication performed.
-     *
-     * If the repository URL scheme is not "gitlab" just a straight pass through to the existing HttpWagon behaviour.
-     *
      * If configured correctly in components.xml, this should only used for "gitlab" schemes.
      *
      * @param repository            pass through
@@ -70,14 +63,9 @@ public class LeinGitlabWagon extends HttpWagon {
     public void connect(Repository repository, AuthenticationInfo authenticationInfo, ProxyInfoProvider proxyInfoProvider )
             throws ConnectionException, AuthenticationException {
 
-        if (repository.getUrl().startsWith(GITLAB_SCHEME)) {
-            repository.setUrl(correctUrl(repository));
-            setHttpHeadersForAuthentication(authenticationInfo);
-            super.connect(repository, null, proxyInfoProvider);
-        }
-        else {
-            super.connect(repository, authenticationInfo, proxyInfoProvider);
-        }
+        repository.setUrl(correctUrl(repository));
+        setHttpHeadersForAuthentication(authenticationInfo);
+        super.connect(repository, null, proxyInfoProvider);
     }
 
     /**
