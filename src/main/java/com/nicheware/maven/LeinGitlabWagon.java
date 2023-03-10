@@ -33,11 +33,7 @@ package com.nicheware.maven;
  */
 
 import org.apache.maven.wagon.ConnectionException;
-import org.apache.maven.wagon.InputData;
-import org.apache.maven.wagon.ResourceDoesNotExistException;
-import org.apache.maven.wagon.TransferFailedException;
 import org.apache.maven.wagon.authentication.AuthenticationException;
-import org.apache.maven.wagon.authorization.AuthorizationException;
 import org.apache.maven.wagon.providers.http.HttpWagon;
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.apache.maven.wagon.proxy.ProxyInfoProvider;
@@ -46,9 +42,6 @@ import org.apache.maven.wagon.repository.Repository;
 import java.util.Properties;
 
 public class LeinGitlabWagon extends HttpWagon {
-
-    private static String GITLAB_SCHEME = "gitlab:";
-    private static String REPOSITORY_SCHEME = "https:";
 
     /**
      * If the repository URL scheme is "gitlab":
@@ -70,23 +63,17 @@ public class LeinGitlabWagon extends HttpWagon {
     public void connect(Repository repository, AuthenticationInfo authenticationInfo, ProxyInfoProvider proxyInfoProvider )
             throws ConnectionException, AuthenticationException {
 
-        if (repository.getUrl().startsWith(GITLAB_SCHEME)) {
-            repository.setUrl(correctUrl(repository));
+        String originalUrl = repository.getUrl();
+
+        if (originalUrl.startsWith("gitlab:") || originalUrl.startsWith("gitlab-insecure:") ) {
+            String replacedBy = originalUrl.startsWith("gitlab:") ? "https:" : "http:";
+            String newUrl = originalUrl.replaceFirst("gitlab.*?:", replacedBy);
+            repository.setUrl(newUrl);
             setHttpHeadersForAuthentication(authenticationInfo);
             super.connect(repository, null, proxyInfoProvider);
-        }
-        else {
+        }else{
             super.connect(repository, authenticationInfo, proxyInfoProvider);
         }
-    }
-
-    /**
-     * Adjust the repository URL to convert the "gitlab" scheme to "https"
-     * @param repository Repository as source of URL
-     * @return The new corrected URL as a string.
-     */
-    private String correctUrl(Repository repository) {
-        return repository.getUrl().replace(GITLAB_SCHEME, REPOSITORY_SCHEME);
     }
 
     /**

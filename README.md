@@ -47,7 +47,11 @@ In order to trigger the use of this repository wagon you need to replace the `ht
 
                "snapshots" {:url          "gitlab://gitlab.com/api/v4/projects/PROJECT_ID/packages/maven"
                             :username      "Private-Token"
-                            :password      :env/gitlab_private_token}}
+                            :password      :env/gitlab_private_token}
+               "insecure-release" {:url           "gitlab-insecure://gitlab.com/api/v4/projects/PROJECT_ID/packages/maven"
+                                    :username      "Job-Token"
+                                    :password      :env/ci_job_token
+                                    :sign-releases false}}
 ```
 
 #### Store credentials in an encrypted file
